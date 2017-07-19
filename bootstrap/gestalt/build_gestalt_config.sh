@@ -44,11 +44,11 @@ cat - << EOF
     "protocol": "http"
   },
   "security": {
-    "protocol": "$SECURITY_PROTOCOL",
-    "host": "$SECURITY_HOSTNAME",
-    "port": $SECURITY_PORT,
-    "key": "$SECURITY_KEY",
-    "secret": "$SECURITY_SECRET"
+    "protocol": "$GESTALT_SECURITY_PROTOCOL",
+    "host": "$GESTALT_SECURITY_HOSTNAME",
+    "port": $GESTALT_SECURITY_PORT,
+    "key": "$GESTALT_SECURITY_KEY",
+    "secret": "$GESTALT_SECURITY_SECRET"
   },
   "caas": {
     "url" : "http://${DOCKER_PROVIDER_HOSTNAME}:${DOCKER_PROVIDER_PORT}", 
@@ -62,8 +62,8 @@ cat - << EOF
     "responseTopic": "default-response-topic",
     "listenExchange": "default-listen-exchange",
     "listenRoute": "default-listen-route",
-    "computeUsername": "$SECURITY_KEY",
-    "computePassword": "$SECURITY_SECRET",
+    "computeUsername": "$GESTALT_SECURITY_KEY",
+    "computePassword": "$GESTALT_SECURITY_SECRET",
     "computeUrl": "$META_URL",
     "network": "$NETWORK",
     "laserImage" : "${LASER_IMG-galacticfog/gestalt-laser:$CONTAINER_IMAGE_RELEASE_TAG}",
@@ -86,8 +86,8 @@ cat - << EOF
     "image" : "${POLICY_IMG-galacticfog/gestalt-policy:$CONTAINER_IMAGE_RELEASE_TAG}",
     "rabbitExchange" : "policy-exchange",
     "rabbitRoute" : "policy",
-    "laserUser" : "$SECURITY_KEY",
-    "laserPassword" : "$SECURITY_SECRET",
+    "laserUser" : "$GESTALT_SECURITY_KEY",
+    "laserPassword" : "$GESTALT_SECURITY_SECRET",
     "network": "$NETWORK"
   },
   "kong" : {
@@ -99,7 +99,7 @@ cat - << EOF
     "servicePort": 8080
   },
   "rabbit" : {
-    "host" : "$RABBIT_HOSTNAME",
+    "host" : "$RABBIT_HOST",
     "port" : $RABBIT_PORT
   },
   "gateway" : {

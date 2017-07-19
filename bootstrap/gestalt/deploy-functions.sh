@@ -81,13 +81,13 @@ invoke_security_init() {
 }
 
 do_invoke_security_init() {
-  echo "Invoking $SECURITY_URL/init..."
+  echo "Invoking $SEC_URL/init"
 
   # sets HTTP_STATUS and HTTP_BODY
-  http_post $SECURITY_URL/init "{\"username\":\"$SECURITY_ADMIN_USERNAME\",\"password\":\"$SECURITY_ADMIN_PASSWORD\"}"
+  http_post $SEC_URL/init "{\"username\":\"$ADMIN_USERNAME\",\"password\":\"$ADMIN_PASSWORD\"}"
 
   if [ ! "$HTTP_STATUS" -eq "200" ]; then
-    echo "Error invoking $SECURITY_URL/init ($HTTP_STATUS returned)"
+    echo "Error invoking $SEC_URL/init ($HTTP_STATUS returned)"
     return 1
   fi
 
@@ -99,19 +99,20 @@ do_invoke_security_init() {
 }
 
 do_get_security_credentials() {
-  SECURITY_KEY=`cat init_payload | jq '.[] .apiKey' | sed -e 's/^"//' -e 's/"$//'`
+  GESTALT_SECURITY_KEY=`cat init_payload | jq -e -r '.[0].apiKey'`
   exit_on_error "Failed to obtain or parse API key (error code $?), aborting."
 
-  SECURITY_SECRET=`cat init_payload | jq '.[] .apiSecret' | sed -e 's/^"//' -e 's/"$//'`
+  GESTALT_SECURITY_SECRET=`cat init_payload | jq -e -r '.[0].apiSecret'`
   exit_on_error "Failed to obtain or parse API secret (error code $?), aborting."
 }
 
 wait_for_security_init() {
+  SECURL="${GESTALT_SECURITY_PROTOCOL}://${GESTALT_SECURITY_HOSTNAME}:${GESTALT_SECURITY_PORT}/init"
   echo "Waiting for Security to initialize..."
   secs=5
 
   for i in `seq 1 20`; do
-    if [ "`curl $SECURITY_URL/init | jq '.initialized'`" == "true" ]; then
+    if [ "`curl $SECURL | jq '.initialized'`" == "true" ]; then
       echo "Security initialized."
       return 0
     fi
@@ -125,7 +126,7 @@ wait_for_security_init() {
 init_meta() {
   echo "Initializing Meta..."
 
-  if [ -z "$SECURITY_KEY" ]; then
+  if [ -z "$GESTALT_SECURITY_KEY" ]; then
     echo "Parsing security credentials."
     do_get_security_credentials
   fi
@@ -148,11 +149,11 @@ do_init_meta() {
 
   echo "Polling $META_URL/root..."
   # Check if meta initialized (ready to bootstrap when /root returns 500)
-  HTTP_STATUS=$(curl -s -o /dev/null -u $SECURITY_KEY:$SECURITY_SECRET -w '%{http_code}' $META_URL/root)
+  HTTP_STATUS=$(curl -s -o /dev/null -u $GESTALT_SECURITY_KEY:$GESTALT_SECURITY_SECRET -w '%{http_code}' $META_URL/root)
   if [ "$HTTP_STATUS" == "500" ]; then
 
     echo "Bootstrapping Meta at $META_URL/bootstrap..."
-    HTTP_STATUS=$(curl -X POST -s -o /dev/null -u $SECURITY_KEY:$SECURITY_SECRET -w '%{http_code}' $META_URL/bootstrap)
+    HTTP_STATUS=$(curl -X POST -s -o /dev/null -u $GESTALT_SECURITY_KEY:$GESTALT_SECURITY_SECRET -w '%{http_code}' $META_URL/bootstrap)
 
     if [ "$HTTP_STATUS" -ge "200" ] && [ "$HTTP_STATUS" -lt "300" ]; then
       echo "Meta bootstrapped (returned $HTTP_STATUS)."
@@ -161,7 +162,7 @@ do_init_meta() {
     fi
 
     echo "Syncing Meta at $META_URL/sync..."
-    HTTP_STATUS=$(curl -X POST -s -o /dev/null -u $SECURITY_KEY:$SECURITY_SECRET -w '%{http_code}' $META_URL/sync)
+    HTTP_STATUS=$(curl -X POST -s -o /dev/null -u $GESTALT_SECURITY_KEY:$GESTALT_SECURITY_SECRET -w '%{http_code}' $META_URL/sync)
 
     if [ "$HTTP_STATUS" -ge "200" ] && [ "$HTTP_STATUS" -lt "300" ]; then
       echo "Meta synced (returned $HTTP_STATUS)."
@@ -176,7 +177,7 @@ do_init_meta() {
 
 setup_license() {
   echo "Initilizing Gestalt client..."
-  /gestalt/gestaltctl login --meta $META_URL --security $SECURITY_URL $SECURITY_ADMIN_USERNAME $SECURITY_ADMIN_PASSWORD
+  /gestalt/gestaltctl login --meta $META_URL --security $SEC_URL $ADMIN_USERNAME $ADMIN_PASSWORD
   exit_on_error "Gestalt client login did not succeed (error code $?), aborting."
 
   echo "Deploying Gestalt license..."
@@ -227,16 +228,16 @@ create_providers() {
     DATABASE_PORT \
     DATABASE_USERNAME \
     DATABASE_PASSWORD \
-    SECURITY_HOSTNAME \
-    SECURITY_PORT \
-    SECURITY_PROTOCOL \
-    SECURITY_KEY \
-    SECURITY_SECRET \
+    GESTALT_SECURITY_HOSTNAME \
+    GESTALT_SECURITY_PORT \
+    GESTALT_SECURITY_PROTOCOL \
+    GESTALT_SECURITY_KEY \
+    GESTALT_SECURITY_SECRET \
     META_URL \
     LASER_DB_NAME \
     LASER_CPU \
     LASER_MEMORY \
-    RABBIT_HOSTNAME \
+    RABBIT_HOST \
     RABBIT_PORT \
     KONG_DB_NAME \
     EXTERNAL_GATEWAY_PROTOCOL \
@@ -246,7 +247,7 @@ create_providers() {
     NETWORK
 
   # Build Gestalt config
-  SECURITY_KEY=$SECURITY_KEY SECURITY_SECRET=$SECURITY_SECRET \
+  GESTALT_SECURITY_KEY=$GESTALT_SECURITY_KEY GESTALT_SECURITY_SECRET=$GESTALT_SECURITY_SECRET \
   KONG_EXTERNAL_PROTOCOL=$EXTERNAL_GATEWAY_PROTOCOL \
   KONG_GATEWAY_VHOST=$EXTERNAL_GATEWAY_URL META_URL=$META_URL \
   /gestalt/build_gestalt_config.sh > $secrets_file
@@ -268,4 +269,4 @@ create_providers() {
 }
 
 META_URL="$META_PROTOCOL://$META_HOSTNAME:$META_PORT"
-SECURITY_URL="$SECURITY_PROTOCOL://$SECURITY_HOSTNAME:$SECURITY_PORT"
+SEC_URL="$GESTALT_SECURITY_PROTOCOL://$GESTALT_SECURITY_HOSTNAME:$GESTALT_SECURITY_PORT"
