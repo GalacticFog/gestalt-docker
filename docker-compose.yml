@@ -12,7 +12,8 @@ services:
     - PORT=2375
   #######################
   data:
-    image: galacticfog/gestalt-data:release-1.2.0
+    #image: galacticfog/gestalt-data:latest
+    build: data
     networks:
     - gestalt
     environment:
@@ -24,7 +25,7 @@ services:
         delay: 5s
   #######################
   rabbit:
-    image: galacticfog/rabbit:release-1.2.0
+    image: galacticfog/rabbit:latest
     networks:
     - gestalt
     deploy:
@@ -33,7 +34,7 @@ services:
         delay: 5s
   #######################
   security:
-    image: galacticfog/gestalt-security:release-1.2.0
+    image: galacticfog/gestalt-security:latest
     networks:
     - gestalt
     depends_on:
@@ -50,8 +51,7 @@ services:
         delay: 5s
   #######################
   meta: 
-    #image: galacticfog/gestalt-meta:release-1.2.1
-    image: gestalt-meta:0.6.22
+    image: galacticfog/gestalt-meta:latest
     networks:
     - gestalt
     depends_on:
@@ -70,7 +70,7 @@ services:
         delay: 5s
   #######################
   ui:
-    image: galacticfog/gestalt-ui-react:1.0.0-af6686a1
+    image: galacticfog/gestalt-ui-react:latest
     networks:
     - gestalt
     depends_on:
@@ -107,35 +107,28 @@ services:
     - DOCKER_PROVIDER_PORT=2375
     - DOCKER_PROVIDER_NETWORKS=gestaltdocker_gestalt
     - DATABASE_NAME=postgres
-    - SECURITY_PROTOCOL=http
-    - SECURITY_HOSTNAME=security
-    - SECURITY_PORT=9000
-    - SECURITY_ADMIN_USERNAME=root
-    - SECURITY_ADMIN_PASSWORD=root
-    - SECURITY_URL=http://security:9000
-    - META_URL=http://meta:9000
+    - ADMIN_USERNAME=root
+    - ADMIN_PASSWORD=root
     - META_HOSTNAME=meta
     - META_PORT=9000
     - META_PROTOCOL=http
     - LASER_DB_NAME=gestalt-laser
     - LASER_CPU=1.0
     - LASER_MEMORY=1536
-    - RABBIT_HOSTNAME=rabbit
-    - RABBIT_PORT=5672
     - KONG_DB_NAME=gestalt-kong
     - GATEWAY_DB_NAME=gestalt-api-gateway
-    - CONTAINER_IMAGE_RELEASE_TAG=release-1.2.0
+    - CONTAINER_IMAGE_RELEASE_TAG=latest
     - NETWORK=gestaltdocker_gestalt
-    - LASER_IMG=galacticfog/gestalt-laser:1.9.6-debug-7f9c8aea
-    - KONG_IMG=galacticfog/kong:release-1.2.1
-    - API_GATEWAY_IMG=galacticfog/gestalt-api-gateway:release-1.2.1
-    #- LASER_JS_IMG=override
-    #- LASER_JVM_IMG=override
-    #- LASER_DOTNET_IMG=override
-    #- LASER_PYTHON_IMG=override
-    #- LASER_RUBY_IMG=override
-    #- LASER_GOLANG_IMG=override
-    #- POLICY_IMG=override
+    #- LASER_IMG=galacticfog/gestalt-laser:override
+    #- KONG_IMG=galacticfog/kong:override
+    #- API_GATEWAY_IMG=galacticfog/gestalt-api-gateway:override
+    #- POLICY_IMG=galacticfog/gestalt-policy:override
+    #- LASER_JS_IMG=galacticfog/gestalt-laser-executor-js:override
+    #- LASER_JVM_IMG=galacticfog/gestalt-laser-executor-jvm:override
+    #- LASER_DOTNET_IMG=galacticfog/gestalt-laser-executor-dotnet:override
+    #- LASER_PYTHON_IMG=galacticfog/gestalt-laser-executor-python:override
+    #- LASER_RUBY_IMG=galacticfog/gestalt-laser-executor-ruby:override
+    #- LASER_GOLANG_IMG=galacticfog/gestalt-laser-executor-golang:override
 networks: 
   gestalt: 
     driver: overlay
