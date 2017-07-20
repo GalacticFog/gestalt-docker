@@ -37,13 +37,8 @@ check_for_required_environment_variables \
   META_PROTOCOL \
   META_HOSTNAME \
   META_PORT \
-  LASER_DB_NAME \
-  LASER_CPU \
-  LASER_MEMORY \
   RABBIT_HOST \
   RABBIT_PORT \
-  KONG_DB_NAME \
-  GATEWAY_DB_NAME \
   CONTAINER_IMAGE_RELEASE_TAG
 
 run wait_for_database

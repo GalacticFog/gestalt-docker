@@ -39,6 +39,8 @@ services:
     - gestalt
     depends_on:
     - data
+    ports:
+    - "9455:9000"
     env_file:
     - db.env
     environment:
@@ -57,6 +59,8 @@ services:
     depends_on:
     - data
     - security
+    ports:
+    - "14374:9000"
     env_file:
     - security.env
     - db.env
@@ -103,22 +107,16 @@ services:
       restart_policy:
         condition: none
     environment:
+    - ADMIN_USERNAME=root
+    - ADMIN_PASSWORD=root
+    - CONTAINER_IMAGE_RELEASE_TAG=latest
+    - NETWORK=gestaltdocker_gestalt
     - DOCKER_PROVIDER_HOSTNAME=docker-proxy
     - DOCKER_PROVIDER_PORT=2375
     - DOCKER_PROVIDER_NETWORKS=gestaltdocker_gestalt
-    - DATABASE_NAME=postgres
-    - ADMIN_USERNAME=root
-    - ADMIN_PASSWORD=root
     - META_HOSTNAME=meta
     - META_PORT=9000
     - META_PROTOCOL=http
-    - LASER_DB_NAME=gestalt-laser
-    - LASER_CPU=1.0
-    - LASER_MEMORY=1536
-    - KONG_DB_NAME=gestalt-kong
-    - GATEWAY_DB_NAME=gestalt-api-gateway
-    - CONTAINER_IMAGE_RELEASE_TAG=latest
-    - NETWORK=gestaltdocker_gestalt
     #- LASER_IMG=galacticfog/gestalt-laser:override
     #- KONG_IMG=galacticfog/kong:override
     #- API_GATEWAY_IMG=galacticfog/gestalt-api-gateway:override
