@@ -55,7 +55,7 @@ cat - << EOF
     "networks": "$DOCKER_PROVIDER_NETWORKS"
   },
   "laser": {
-    "dbName": "$LASER_DB_NAME",
+    "dbName": "${LASER_DB_NAME-gestalt-laser}",
     "monitorExchange": "default-monitor-echange",
     "monitorTopic": "default-monitor-topic",
     "responseExchange": "default-laser-exchange",
@@ -67,8 +67,8 @@ cat - << EOF
     "computeUrl": "$META_URL",
     "network": "$NETWORK",
     "laserImage" : "${LASER_IMG-galacticfog/gestalt-laser:$CONTAINER_IMAGE_RELEASE_TAG}",
-    "laserCpu" : $LASER_CPU,
-    "laserMem" : $LASER_MEMORY,
+    "laserCpu" : ${LASER_CPU-1.0},
+    "laserMem" : ${LASER_MEMORY-1536},
     "laserMaxCoolConnectionTime" : ${LASER_MAX_CONN_TIME-15},
     "laserExecutorHeartbeatTimeout" : ${LASER_EXECUTOR_HEARTBEAT_TIMEOUT-1000},
     "laserExecutorHeartbeatPeriod" : ${LASER_EXECUTOR_HEARTBEAT_PERIOD-500},
@@ -92,7 +92,7 @@ cat - << EOF
   },
   "kong" : {
     "image" : "${KONG_IMG-galacticfog/kong:$CONTAINER_IMAGE_RELEASE_TAG}",
-    "dbName" : "$KONG_DB_NAME",
+    "dbName" : "${KONG_DB_NAME-kong-gateway-1}",
     "gatewayVHost" : "$KONG_GATEWAY_VHOST",
     "externalProtocol" : "$KONG_EXTERNAL_PROTOCOL",
     "network": "$NETWORK",
@@ -104,7 +104,7 @@ cat - << EOF
   },
   "gateway" : {
     "image" : "${API_GATEWAY_IMG-galacticfog/gestalt-api-gateway:$CONTAINER_IMAGE_RELEASE_TAG}",
-    "dbName" : "$GATEWAY_DB_NAME",
+    "dbName" : "${GATEWAY_DB_NAME-gestalt-api-gateway}",
     "network": "$NETWORK"
   }
 }
