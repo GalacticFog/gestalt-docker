@@ -54,6 +54,7 @@ services:
   #######################
   meta: 
     image: galacticfog/gestalt-meta:latest
+    command: ["-Dlogger.resource=logger-debug.xml"]
     networks:
     - gestalt
     depends_on:
