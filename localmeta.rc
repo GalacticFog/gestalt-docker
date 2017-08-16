@@ -1,0 +1,17 @@
+export GESTALT_SECURITY_PROTOCOL=http
+export GESTALT_SECURITY_HOSTNAME=localhost
+export GESTALT_SECURITY_PORT=9455
+
+export DATABASE_HOSTNAME=localhost
+export DATABASE_PORT=5432
+export DATABASE_USERNAME=gestaltdev
+export DATABASE_PASSWORD=letmein
+export DATABASE_NAME=gestalt-meta
+
+export RABBIT_HOST=localhost
+export RABBIT_HTTP_PORT=15672
+export RABBIT_PORT=5672
+export RABBIT_ROUTE=policy
+export RABBIT_EXCHANGE=policy-exchange
+
+export META_POLICY_CALLBACK_URL=http://192.168.1.62:9000
