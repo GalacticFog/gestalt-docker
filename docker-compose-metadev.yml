@@ -126,6 +126,10 @@ services:
     - META_HOSTNAME=192.168.1.62
     - META_PORT=9000
     - META_PROTOCOL=http
+    - GATEWAY_SERVICE_HOST_OVERRIDE=192.168.1.62
+    - GATEWAY_SERVICE_PORT_OVERRIDE=31000
+    - LASER_SERVICE_HOST_OVERRIDE=192.168.1.62
+    - LASER_SERVICE_PORT_OVERRIDE=31001
     #- LASER_IMG=galacticfog/gestalt-laser:override
     #- KONG_IMG=galacticfog/kong:override
     #- API_GATEWAY_IMG=galacticfog/gestalt-api-gateway:override

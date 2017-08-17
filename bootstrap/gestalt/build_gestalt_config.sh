@@ -72,6 +72,8 @@ cat - << EOF
     "laserMaxCoolConnectionTime" : ${LASER_MAX_CONN_TIME-15},
     "laserExecutorHeartbeatTimeout" : ${LASER_EXECUTOR_HEARTBEAT_TIMEOUT-1000},
     "laserExecutorHeartbeatPeriod" : ${LASER_EXECUTOR_HEARTBEAT_PERIOD-500},
+    "serviceHostOverride": "$LASER_SERVICE_HOST_OVERRIDE",
+    "servicePortOverride": ${LASER_SERVICE_PORT_OVERRIDE-0},
     "executors" : [
       {
         "image" : "${LASER_JS_IMG-galacticfog/gestalt-laser-executor-js:$CONTAINER_IMAGE_RELEASE_TAG}",
@@ -105,7 +107,9 @@ cat - << EOF
   "gateway" : {
     "image" : "${API_GATEWAY_IMG-galacticfog/gestalt-api-gateway:$CONTAINER_IMAGE_RELEASE_TAG}",
     "dbName" : "${GATEWAY_DB_NAME-gestalt-api-gateway}",
-    "network": "$NETWORK"
+    "network": "$NETWORK",
+    "serviceHostOverride": "$GATEWAY_SERVICE_HOST_OVERRIDE",
+    "servicePortOverride": ${GATEWAY_SERVICE_PORT_OVERRIDE-0}
   }
 }
 EOF
