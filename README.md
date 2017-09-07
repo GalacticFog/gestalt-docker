@@ -1,6 +1,6 @@
 # Up 
 
-Customization in the `bootstrap` service in `docker-compose.yml`
+Important:  Customize service initialization in `docker-compose.yml`
 
 ```
 docker-compose up --force-recreate --build
