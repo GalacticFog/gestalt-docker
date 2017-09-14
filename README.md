@@ -18,3 +18,12 @@ If this fails run 'docker ps' and check to see which port galacticfog/gestalt-ui
 docker service ls -q | xargs docker service rm
 docker-compose down
 ```
+
+# Meta developer mode
+
+For local meta dev, modify the `docker-compose-metadev.yml` and `localmeta.rc` file to include your IP address.
+
+Source `localmeta.rc` and run meta. Then start the stack with:
+```
+docker-compose -f ./docker-compose-metadev.yml up --force-recreate --build
+```

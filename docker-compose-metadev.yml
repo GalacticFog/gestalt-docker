@@ -10,6 +10,8 @@ services:
     - /var/run/docker.sock:/var/run/docker.sock:rw
     environment: 
     - PORT=2375
+    ports: 
+    - "2375:2375"
   #######################
   data:
     build: data
@@ -18,6 +20,8 @@ services:
     environment:
     - POSTGRES_USER=gestaltdev
     - POSTGRES_PASSWORD=letmein
+    ports: 
+    - "5432:5432"
     deploy:
       restart_policy:
         condition: on-failure
@@ -27,6 +31,9 @@ services:
     image: galacticfog/rabbit:latest
     networks:
     - gestalt
+    ports: 
+    - "5672:5672"
+    - "15672:15672"
     deploy:
       restart_policy:
         condition: on-failure
@@ -50,40 +57,42 @@ services:
       restart_policy:
         condition: on-failure
         delay: 5s
-  #######################
-  meta: 
-    image: galacticfog/gestalt-meta:latest
-    command: ["-Dlogger.resource=logger-debug.xml"]
-    networks:
-    - gestalt
-    depends_on:
-    - data
-    - security
-    ports:
-    - "14374:9000"
-    env_file:
-    - security.env
-    - db.env
-    - rabbit.env
-    environment:
-    - DATABASE_NAME=gestalt-meta
-    - META_POLICY_CALLBACK_URL=http://meta:9000
-    deploy:
-      restart_policy:
-        condition: on-failure
-        delay: 5s
+#  #######################
+#  run your own meta... this is some clues for doing that
+#  meta: 
+#    #image: gestalt-meta:0.6.26 # local version here
+#    command: ["-Dlogger.resource=logger-debug.xml", "-jvm-debug", "10000"]
+#    networks:
+#    - gestalt
+#    depends_on:
+#    - data
+#    - security
+#    ports:
+#    - "14374:9000"
+#    - "10000:10000"
+#    env_file:
+#    - security.env
+#    - db.env
+#    - rabbit.env
+#    environment:
+#    - DATABASE_NAME=gestalt-meta
+#    - META_POLICY_CALLBACK_URL=http://meta:9000
+#    deploy:
+#      restart_policy:
+#        condition: on-failure
+#        delay: 5s
   #######################
   ui:
     image: galacticfog/gestalt-ui-react:latest
     networks:
     - gestalt
     depends_on:
-    - meta
     - security
+    #- meta
     ports:
     - "80:80"
     environment:
-    - META_API_URL=http://meta:9000
+    - META_API_URL=http://192.168.1.62:9000
     - SEC_API_URL=http://security:9000
     deploy:
       restart_policy:
@@ -96,8 +105,8 @@ services:
     - gestalt
     command: "deploy"
     depends_on:
-    - meta
     - security
+    #- meta
     env_file:
     - security.env
     - db.env
@@ -110,10 +119,10 @@ services:
     - ADMIN_PASSWORD=root
     - CONTAINER_IMAGE_RELEASE_TAG=latest
     - NETWORK=gestaltdocker_gestalt
-    - DOCKER_PROVIDER_HOSTNAME=docker-proxy
+    - DOCKER_PROVIDER_HOSTNAME=192.168.1.62
     - DOCKER_PROVIDER_PORT=2375
     - DOCKER_PROVIDER_NETWORKS=gestaltdocker_gestalt
-    - META_HOSTNAME=meta
+    - META_HOSTNAME=192.168.1.62
     - META_PORT=9000
     - META_PROTOCOL=http
     #- LASER_IMG=galacticfog/gestalt-laser:override
