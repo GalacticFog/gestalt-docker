@@ -1,14 +1,11 @@
 # Up 
 
 1. Clone this repo.  
-2. Customize service initialization by `vi docker-compose.yml`  
+2. Customize service initialization by editing `docker-compose.yml`  
  IMPORTANT: Be sure to change password defaults, etc. 
-3. Start system by with command:  
-```
-docker-compose up --force-recreate
-```
+3. Launch the platform with  `docker-compose up --force-recreate`
 
-After you see the message  'gestaltdocker_bootstrap_1 exited with code 0'  you should be able to point your browser at: http://localhost/login  and get a login.  
+After you see the message  `gestaltdocker_bootstrap_1 exited with code 0`  you should be able to log in at http://localhost/login.
 If this fails run 'docker ps' and check to see which port galacticfog/gestalt-ui-react container is bound to.  
 
 
