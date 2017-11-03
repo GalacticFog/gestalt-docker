@@ -7,7 +7,7 @@
 docker-compose up --force-recreate --build
 ```
 
-After you see the message `gestaltdocker_bootstrap_1 exited with code 0` you should be able to point your browser at: http://localhost and login with the credential set in the
+After you see the message `gestaltdocker_bootstrap_1 exited with code 0` you should be able to point your browser at http://localhost and login with the credential set in the
 `docker-compose.yml` file (`ADMIN_USERNAME` and `ADMIN_PASSWORD`, set to `root:root` by default).
 
 If this fails, run `docker ps` and check to see which port the `gestaltdocker_ui_1` container is bound to.  
