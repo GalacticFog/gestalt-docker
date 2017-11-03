@@ -70,6 +70,7 @@ cat - << EOF
     "laserCpu" : ${LASER_CPU-1.0},
     "laserMem" : ${LASER_MEMORY-1536},
     "laserMaxCoolConnectionTime" : ${LASER_MAX_CONN_TIME-15},
+    "laserExecutorPort": 60501,
     "laserExecutorHeartbeatTimeout" : ${LASER_EXECUTOR_HEARTBEAT_TIMEOUT-1000},
     "laserExecutorHeartbeatPeriod" : ${LASER_EXECUTOR_HEARTBEAT_PERIOD-500},
     "executors" : [
@@ -77,8 +78,8 @@ cat - << EOF
         "image" : "${LASER_JS_IMG-galacticfog/gestalt-laser-executor-js:$CONTAINER_IMAGE_RELEASE_TAG}",
         "name" : "js-executor",
         "cmd" : "bin/gestalt-laser-executor-js",
-        "runtime" : "nodejs",
-        "metaType" : "NodeJS"
+        "runtime" : "nashorn",
+        "metaType" : "Nashorn"
       }
     ]
   },
