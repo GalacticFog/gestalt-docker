@@ -38,8 +38,8 @@ services:
     - gestalt
     depends_on:
     - data
-    ports:
-    - "9455:9000"
+    #ports:
+    #- "9455:9000"
     env_file:
     - db.env
     environment:
@@ -59,8 +59,8 @@ services:
     depends_on:
     - data
     - security
-    ports:
-    - "14374:9000"
+    #ports:
+    #- "14374:9000"
     env_file:
     - security.env
     - db.env
